@@ -1,8 +1,25 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
+<div class="flip-card">
+	<div class="flip-card-inner">
+		<div class="flip-card-front">
+			<div style="display: block">
+				<canvas baseChart
+					[datasets]="barChartData"
+					[labels]="barChartLabels"
+					[options]="barChartOptions"
+					[legend]="barChartLegend"
+					[chartType]="barChartType">
+				</canvas>
+			</div>
+		</div>
+		<div class="flip-card-back">
+			<h1>John Doe</h1> 
+			<p>Architect & Engineer</p> 
+			<p>We love that guy</p>
+		</div>
+	</div>
+</div>
+<div *ngIf="res">
+	{{res.identity}}
 </div>
 
 <router-outlet></router-outlet>
