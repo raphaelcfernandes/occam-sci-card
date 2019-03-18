@@ -8,12 +8,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatCardModule, MatButtonModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChartsModule } from 'ng2-charts';
-import {OccamRequesterService} from '../services/occam-requester.service';
+import { OccamRequesterService } from '../services/occam-requester.service';
+import { NavbarComponent } from './navbar/navbar.component';
+import { DragAndDropDirective } from './drag-and-drop.directive';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponentComponent
+    LoginComponentComponent,
+    NavbarComponent,
+    DragAndDropDirective
   ],
   imports: [
     BrowserModule,

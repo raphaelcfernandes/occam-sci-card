@@ -1,25 +1,42 @@
-<div class="flip-card">
-	<div class="flip-card-inner">
-		<div class="flip-card-front">
-			<div style="display: block">
-				<canvas baseChart
+<!-- <app-navbar></app-navbar> -->
+
+<div class="wrapper">
+	<div class="card" [@flipState]="flip">
+		<div class="card-side front">
+			<canvas baseChart
 					[datasets]="barChartData"
 					[labels]="barChartLabels"
 					[options]="barChartOptions"
 					[legend]="barChartLegend"
 					[chartType]="barChartType">
-				</canvas>
+			</canvas>
+		</div>
+		<div class="card-side back">
+			<div *ngIf = "res">
+				Identity: {{res.identity}}
+				Uid: {{res.uid}}
 			</div>
 		</div>
-		<div class="flip-card-back">
-			<h1>John Doe</h1> 
-			<p>Architect & Engineer</p> 
-			<p>We love that guy</p>
-		</div>
+	</div>
+	<button (click)="toggleFlip()">Check configurations</button>
+</div>
+<div class="dropzone" appDragAndDrop (filesChangeEmiter)="onFilesChange($event)" (filesInvalidEmiter)="onFileInvalids($event)" [allowedExtensions]="['pdf','png', 'jpg', 'bmp']">
+	<div class="text-wrapper">
+		<div class="centered">Drop your file here!</div>
 	</div>
 </div>
-<div *ngIf="res">
-	{{res.identity}}
+<div class="dropzone-list">
+	<ul class="valid">
+		Valid list
+		<li *ngFor="let file of fileList">
+		{{ file }}
+		</li>
+	</ul>
+	<ul class="invalid">
+		Invalid list
+		<li *ngFor="let file of invalidFiles">
+		{{ file }}
+		</li>
+	</ul>
 </div>
-
 <router-outlet></router-outlet>

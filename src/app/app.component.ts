@@ -1,17 +1,35 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import {trigger, state, style, transition, animate} from '@angular/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  animations: [
+    trigger('flipState', [
+      state('active', style({
+        transform: 'rotateY(180deg)'
+      })),
+      state('inactive', style({
+        transform: 'rotateY(0)'
+      })),
+      transition('active => inactive', animate('500ms ease-out')),
+      transition('inactive => active', animate('500ms ease-out'))
+    ])
+  ]
 })
+
 export class AppComponent implements OnInit {
   public barChartOptions = {
     scaleShowVerticalLines: false,
     responsive: true
   };
-  private res: any; 
+  private fileList: any = [];
+  private invalidFiles: any = [];
+  private flip = 'inactive';
+  private res: any;
+  private btnStyle = 'flip-card-inner';
   public barChartLabels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
   public barChartType = 'bar';
   public barChartLegend = true;
@@ -27,5 +45,17 @@ export class AppComponent implements OnInit {
       this.res = res;
       console.log(this.res);
     });
+  }
+  toggleFlip() {
+    this.flip = (this.flip === 'inactive') ? 'active' : 'inactive';
+  }
+
+  onFilesChange(fileList: Array<File>){
+    this.fileList = fileList;
+    console.log(this.fileList)
+  }
+
+  onFileInvalids(fileList: Array<File>){
+    this.invalidFiles = fileList;
   }
 }
