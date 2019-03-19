@@ -1,3 +1,5 @@
+
+
 .wrapper {
     perspective: 1000px;
     width: 400px;
@@ -36,7 +38,7 @@
     font-size: 14px;
 }
 
-button {
+.button {
     border: none;
     outline: 0;
     display: inline-block;

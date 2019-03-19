@@ -1,0 +1,16 @@
+<form #form="ngForm" (ngSubmit)="onSubmit(form.form);" class="form">
+  <div class="full-width">
+    <mat-form-field class="input">
+      <input matInput placeholder="Occam Experiment URL" name="URL" ngModel>
+    </mat-form-field>
+    <button mat-raised-button color="accent" class="button">Execute</button>
+  </div>
+</form>
+
+<div *ngIf="config">
+  name: {{config.name}}<br>
+  CPU clock_frequency: {{config.cpu.clock_frequency}}<br>
+  memory: {{config.memory.backend}}<br>
+  {{config.memory["clock"]}}<br>
+  {{config.memory["backend.mem_size"]}}
+</div>

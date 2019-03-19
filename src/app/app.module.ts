@@ -11,14 +11,17 @@ import { ChartsModule } from 'ng2-charts';
 import { OccamRequesterService } from '../services/occam-requester.service';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DragAndDropDirective } from './drag-and-drop.directive';
-
+import { MatInputModule } from '@angular/material/input';
+import { HomeComponent } from './home/home.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponentComponent,
     NavbarComponent,
-    DragAndDropDirective
+    DragAndDropDirective,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,9 @@ import { DragAndDropDirective } from './drag-and-drop.directive';
     MatCardModule,
     MatButtonModule,
     BrowserAnimationsModule,
-    ChartsModule
+    ChartsModule,
+    MatInputModule,
+    FormsModule
   ],
   providers: [OccamRequesterService],
   bootstrap: [AppComponent]
