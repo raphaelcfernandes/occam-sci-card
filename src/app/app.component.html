@@ -3,13 +3,14 @@
 <div class="wrapper">
 	<div class="card" [@flipState]="flip">
 		<div class="card-side front">
-			<canvas baseChart
+			Front
+			<!-- <canvas baseChart
 					[datasets]="barChartData"
 					[labels]="barChartLabels"
 					[options]="barChartOptions"
 					[legend]="barChartLegend"
 					[chartType]="barChartType">
-			</canvas>
+			</canvas> -->
 		</div>
 		<div class="card-side back">
 			<div *ngIf = "res">
@@ -25,7 +26,7 @@
 		<div class="centered">Drop your file here!</div>
 	</div>
 </div>
-<div class="dropzone-list">
+<!-- <div class="dropzone-list">
 	<ul class="valid">
 		Valid list
 		<li *ngFor="let file of fileList">
@@ -38,5 +39,5 @@
 		{{ file }}
 		</li>
 	</ul>
-</div>
+</div> -->
 <router-outlet></router-outlet>
