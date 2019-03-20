@@ -1,8 +1,8 @@
 .form {
-    left:25%;
+    left:30%;
     width:50%;
     height:50%;
-    top:25%;
+    top: 40%;
     position:absolute;
     display: flex;
 }
