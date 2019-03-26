@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +25,7 @@ export class OccamRequesterService {
     for (const i in arr.contains) {
       if (arr.contains[i].type === 'workflow') {
         const worfkFlow = url.split('?')[0] + '/' + i + '?token=' + token;
-        const result =  await this.httpClient.get(worfkFlow).toPromise();
+        const result = await this.httpClient.get(worfkFlow).toPromise();
         return result;
       }
     }
@@ -35,9 +34,9 @@ export class OccamRequesterService {
   private async findConfigByName(obj: any, name: string, token: string) {
     for (const i in obj.contains) {
       if (!obj.contains[i].name.includes(name)) {
-          const result = await this.httpClient.get(this.occamUrl + obj.contains[i].id + '/'
-                        + obj.contains[i].revision + '/raw/data.json?token=' + token).toPromise();
-          return result;
+        const result = await this.httpClient.get(this.occamUrl + obj.contains[i].id + '/'
+          + obj.contains[i].revision + '/raw/data.json?token=' + token).toPromise();
+        return result;
       }
     }
   }
