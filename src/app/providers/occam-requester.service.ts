@@ -18,18 +18,8 @@ export class OccamRequesterService {
     return thirdResult;
   }
 
-  public getOutputFromExperiment(URL: string): any[] {
-    const plotsUrlArrays = [];
-    this.httpClient.get(URL).toPromise().then((result: any) => {
-      for (const data of result) {
-        if (data.type === 'plot') {
-          const url = this.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
-          plotsUrlArrays.push(url);
-        }
-      }
-      return plotsUrlArrays;
-    });
-    return plotsUrlArrays;
+  public getOutputFromExperiment(URL: string): Promise<any> {
+    return this.httpClient.get(URL).toPromise();
   }
 
   // Returns array contains. This array tells what the object has

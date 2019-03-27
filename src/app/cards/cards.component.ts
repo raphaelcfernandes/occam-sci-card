@@ -34,12 +34,19 @@ export class CardsComponent implements OnInit {
       this.occamRS.getConfigurationFromExperiment(url).then(result => {
         this.config = result;
       });
-      this.plotsUrlArrays = this.occamRS.getOutputFromExperiment(outputURL);
+      this.occamRS.getOutputFromExperiment(outputURL).then(result => {
+        for (const data of result) {
+          if (data.type === 'plot') {
+            const plotURL = this.occamRS.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
+            this.plotsUrlArrays.push({ url: plotURL, state: 'inactive' });
+          }
+        }
+      });
     });
   }
 
-  toggleFlip() {
-    this.flip = (this.flip === 'inactive') ? 'active' : 'inactive';
+  toggleFlip(element) {
+    element.state = (element.state === 'inactive') ? 'active' : 'inactive';
   }
 
   private reconstructExperimentURL(): string {
