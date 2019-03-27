@@ -9,13 +9,27 @@ export class OccamRequesterService {
   private token: any;
   constructor(private httpClient: HttpClient) { }
 
-  public async getDataFromExperiment(URL: string) {
+  public async getConfigurationFromExperiment(URL: string) {
     this.token = URL.split('?')[1];
     this.token = this.token.slice(6, this.token.length);
     const firstResult = await this.getDataFromURL(URL);
     const secondResult = await this.findWorkFlow(firstResult, URL);
     const thirdResult = await this.findConfigByName(secondResult, 'configuration');
     return thirdResult;
+  }
+
+  public getOutputFromExperiment(URL: string): any[] {
+    const plotsUrlArrays = [];
+    this.httpClient.get(URL).toPromise().then((result: any) => {
+      for (const data of result) {
+        if (data.type === 'plot') {
+          const url = this.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
+          plotsUrlArrays.push(url);
+        }
+      }
+      return plotsUrlArrays;
+    });
+    return plotsUrlArrays;
   }
 
   // Returns array contains. This array tells what the object has
