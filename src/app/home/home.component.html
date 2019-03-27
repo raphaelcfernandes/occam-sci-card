@@ -8,14 +8,3 @@
     <button mat-raised-button color="accent" class="button">Execute</button>
   </div>
 </form>
-
-<!-- <iframe width="420" height="520" [src]="teste | iFrameSafe">
-</iframe> -->
-
-<div *ngIf="config">
-  name: {{config.name}}<br>
-  CPU clock_frequency: {{config.cpu.clock_frequency}}<br>
-  memory: {{config.memory.backend}}<br>
-  {{config.memory["clock"]}}<br>
-  {{config.memory["backend.mem_size"]}}
-</div>

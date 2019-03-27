@@ -1,16 +1,21 @@
 <div class="wrapper">
   <div class="card" [@flipState]="flip">
     <div class="card-side front">
-      Front
+      <iframe [src]="teste | iFrameSafe" class="resp-iframe"></iframe> 
     </div>
     <div class="card-side back">
-      <div *ngIf="res">
-        Back
+        <div *ngIf="config">
+          name: {{config.name}}<br>
+          CPU clock_frequency: {{config.cpu.clock_frequency}}<br>
+          memory: {{config.memory.backend}}<br>
+          <!-- {{config.memory["clock"]}}<br>
+          {{config.memory["backend.mem_size"]}} -->
       </div>
     </div>
   </div>
   <button class="button" (click)="toggleFlip()">Check configurations</button>
 </div>
+
 <!-- <div class="dropzone" appDragAndDrop (filesChangeEmiter)="onFilesChange($event)"
 	(filesInvalidEmiter)="onFileInvalids($event)" [allowedExtensions]="['pdf','png', 'jpg', 'bmp']">
 	<div class="text-wrapper">
