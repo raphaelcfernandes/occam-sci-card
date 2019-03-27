@@ -1,5 +1,7 @@
-<div *ngFor="let d of plotsUrlArrays; let i = index">
-  <div class="wrapper">
+<app-navbar></app-navbar>
+
+<div *ngFor="let d of plotsUrlArrays; let i = index" >
+  <div class="wrapper" >
     <div class="card" [@flipState]="d.state">
       <div class="card-side front">
         <!-- <iframe [src]="d.url | iFrameSafe" class="resp-iframe"></iframe> -->
@@ -16,6 +18,7 @@
     </div>
     <button class="button" (click)="toggleFlip(d)">Check configurations</button>
   </div>
+  <br>
 </div>
 
 <!-- <div class="dropzone" appDragAndDrop (filesChangeEmiter)="onFilesChange($event)"

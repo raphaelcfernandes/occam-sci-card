@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { OccamRequesterService } from '../providers/occam-requester.service';
@@ -11,14 +11,14 @@ import { HttpClient } from '@angular/common/http';
   providers: [OccamRequesterService]
 })
 
-export class CardsComponent implements OnInit {
+export class CardsComponent implements OnInit, OnDestroy {
   private flip = 'inactive';
   private sub: any;
   private id: string;
   private token: string;
   private revision: string;
   private config: any;
-  private plotsUrlArrays = [];
+  private plotsUrlArrays = [{state:'inactive'},{state:'inactive'}];
 
   constructor(private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private occamRS: OccamRequesterService) { }
 
@@ -34,15 +34,19 @@ export class CardsComponent implements OnInit {
       this.occamRS.getConfigurationFromExperiment(url).then(result => {
         this.config = result;
       });
-      this.occamRS.getOutputFromExperiment(outputURL).then(result => {
-        for (const data of result) {
-          if (data.type === 'plot') {
-            const plotURL = this.occamRS.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
-            this.plotsUrlArrays.push({ url: plotURL, state: 'inactive' });
-          }
-        }
-      });
+      // this.occamRS.getOutputFromExperiment(outputURL).then(result => {
+      //   for (const data of result) {
+      //     if (data.type === 'plot') {
+      //       const plotURL = this.occamRS.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
+      //       this.plotsUrlArrays.push({ url: plotURL, state: 'inactive' });
+      //     }
+      //   }
+      // });
     });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
   }
 
   toggleFlip(element) {
