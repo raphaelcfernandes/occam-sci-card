@@ -6,16 +6,45 @@ import { HttpClient } from '@angular/common/http';
 })
 export class OccamRequesterService {
   public readonly occamUrl = 'https://occam-dev.cs.pitt.edu/';
-  private token: any;
   constructor(private httpClient: HttpClient) { }
 
   public async getConfigurationFromExperiment(URL: string) {
-    this.token = URL.split('?')[1];
-    this.token = this.token.slice(6, this.token.length);
+    const token = this.getToken(URL);
     const firstResult = await this.getDataFromURL(URL);
-    const secondResult = await this.findWorkFlow(firstResult, URL);
-    const thirdResult = await this.findConfigByName(secondResult, 'configuration');
+    const workflow = await this.findWorkFlow(firstResult, URL, token);
+    const thirdResult = await this.findConfigByName(workflow, 'configuration', token);
     return thirdResult;
+  }
+
+  public async getBuildFromExperiment(URL: string) {
+    const token = this.getToken(URL);
+    const firstResult = await this.getDataFromURL(URL);
+    const workflow = await this.findWorkFlow(firstResult, URL, token);
+    //Should this be a list in the future?
+    const object = await this.findConfigForXSIM(workflow, token);
+    const final = await this.getBuild(object, token);
+    return final;
+  }
+
+  private async getBuild(obj: any, token: string) {
+    const url = this.occamUrl + obj.schema.id + '/' + obj.schema.revision + '/?token=' + token;
+    return await this.httpClient.get(url).toPromise();
+  }
+
+  //The name of this function should change
+  private async findConfigForXSIM(workflow: any, token: string) {
+    for (const obj of workflow.contains) {
+      if (!obj.name.includes('plotter')) {
+        const url = this.occamUrl + obj.id + '/' + obj.revision + '?token=' + token;
+        return await this.httpClient.get(url).toPromise();
+      }
+    }
+  }
+
+  private getToken(URL: string): string {
+    let token = URL.split('?')[1];
+    token = token.slice(6, token.length);
+    return token;
   }
 
   public getOutputFromExperiment(URL: string): Promise<any> {
@@ -27,21 +56,21 @@ export class OccamRequesterService {
     return await this.httpClient.get(URL).toPromise();
   }
 
-  private async findWorkFlow(arr: any, url: string) {
+  private async findWorkFlow(arr: any, URL: string, token: string) {
     for (const i in arr.contains) {
       if (arr.contains[i].type === 'workflow') {
-        const worfkFlow = url.split('?')[0] + '/' + i + '?token=' + this.token;
+        const worfkFlow = URL.split('?')[0] + '/' + i + '?token=' + token;
         const result = await this.httpClient.get(worfkFlow).toPromise();
         return result;
       }
     }
   }
 
-  private async findConfigByName(obj: any, name: string) {
+  private async findConfigByName(obj: any, name: string, token: string) {
     for (const i in obj.contains) {
       if (!obj.contains[i].name.includes(name)) {
         const result = await this.httpClient.get(this.occamUrl + obj.contains[i].id + '/'
-          + obj.contains[i].revision + '/raw/data.json?token=' + this.token).toPromise();
+          + obj.contains[i].revision + '/raw/data.json?token=' + token).toPromise();
         return result;
       }
     }

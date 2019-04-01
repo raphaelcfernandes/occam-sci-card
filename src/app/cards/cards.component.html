@@ -21,6 +21,31 @@
   <br>
 </div>
 
+<div *ngIf='XSIMConfig' style="margin-left: 10px">
+  Archictecure: {{XSIMConfig.architecture}}<br>
+  Environment: {{XSIMConfig.environment}}<br>
+  Dependencies:
+  <ul *ngFor="let i of XSIMConfig.dependencies">
+    <li>
+      {{i.name}}: {{i.version}}, {{i.type}}
+    </li>
+  </ul>
+  <br>
+  Build dependencies:
+  <ul *ngFor="let i of XSIMConfig.build.dependencies">
+    <li>
+      {{i.name}}: {{i.version}}, {{i.type}}
+    </li>
+  </ul>
+  <br>
+  Run dependencies:
+  <ul *ngFor="let i of XSIMConfig.run.dependencies">
+    <li>
+      {{i.name}}: {{i.version}}, {{i.type}}
+    </li>
+  </ul>
+</div>
+
 <!-- <div class="dropzone" appDragAndDrop (filesChangeEmiter)="onFilesChange($event)"
 	(filesInvalidEmiter)="onFileInvalids($event)" [allowedExtensions]="['pdf','png', 'jpg', 'bmp']">
 	<div class="text-wrapper">
