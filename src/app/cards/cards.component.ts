@@ -34,6 +34,7 @@ export class CardsComponent implements OnInit, OnDestroy {
       arr.splice(1, 0, '/output?');
       const outputURL = arr.join('');
       this.occamRS.getBuildFromExperiment(t).then(result => {
+        
         console.log(result);
         this.XSIMConfig = result;
       });
