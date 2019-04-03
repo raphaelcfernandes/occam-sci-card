@@ -28,30 +28,28 @@ export class CardsComponent implements OnInit, OnDestroy {
       this.setId(data.id);
       this.setRevision(data.revision);
       this.setToken(data.token);
-      const t = 'https://occam-dev.cs.pitt.edu/QmcHkCwYQsLVdj1jZYKHKc2rfLGnaRxwcRwCMyoqU3L9dr/5drdakP3p7FoWiSNEQQMTY6s65Zuxa/0?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyZWFkT25seSI6IlFtY2F0Q0p4MnFTeEhockJWdVhySkt2ODg0VGpwNTVGMjhEcHFleFNBaG82enUifQ.R1EV7GdJqc-JEkOE7EAPCwLw1SJSqfBHG0G3T1J7vyc&link=73';
       const url = this.reconstructExperimentURL();
       const arr = url.split('?');
       arr.splice(1, 0, '/output?');
       const outputURL = arr.join('');
-      this.occamRS.getBuildFromExperiment(t).then(result => {
-        
+      this.occamRS.getBuildFromExperiment(url).then(result => {
         console.log(result);
         this.XSIMConfig = result;
       });
-      this.httpClient.get("https://occam-dev.cs.pitt.edu/QmQ1i5VjdxdU7dWCkhpM7ccVDCBNPX2swTLQSHRiCW8sK1").toPromise().then(result => {
-        console.log(result)
-      })
-      // this.occamRS.getConfigurationFromExperiment(url).then(result => {
-      //   this.config = result;
-      // });
-      // this.occamRS.getOutputFromExperiment(outputURL).then(result => {
-      //   for (const data of result) {
-      //     if (data.type === 'plot') {
-      //       const plotURL = this.occamRS.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
-      //       this.plotsUrlArrays.push({ url: plotURL, state: 'inactive' });
-      //     }
-      //   }
-      // });
+      // this.httpClient.get("https://occam-dev.cs.pitt.edu/QmQ1i5VjdxdU7dWCkhpM7ccVDCBNPX2swTLQSHRiCW8sK1").toPromise().then(result => {
+      //   console.log(result)
+      // })
+      this.occamRS.getConfigurationFromExperiment(url).then(result => {
+        this.config = result;
+      });
+      this.occamRS.getOutputFromExperiment(outputURL).then(result => {
+        for (const data of result) {
+          if (data.type === 'plot') {
+            const plotURL = this.occamRS.occamUrl + data.id + '/' + data.revision + '?token=' + this.token + '&embed';
+            this.plotsUrlArrays.push({ url: plotURL, state: 'inactive' });
+          }
+        }
+      });
     });
   }
 

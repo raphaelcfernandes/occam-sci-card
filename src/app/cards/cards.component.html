@@ -1,24 +1,25 @@
 <app-navbar></app-navbar>
-
-<div *ngFor="let d of plotsUrlArrays; let i = index" >
-  <div class="wrapper" >
-    <div class="card" [@flipState]="d.state">
-      <div class="card-side front">
-        <!-- <iframe [src]="d.url | iFrameSafe" class="resp-iframe"></iframe> -->
-      </div>
-      <div class="card-side back">
-        <div *ngIf="config">
-          name: {{config.name}}<br>
-          CPU clock_frequency: {{config.cpu.clock_frequency}}<br>
-          memory: {{config.memory.backend}}<br>
-          <!-- {{config.memory["clock"]}}<br>
-            {{config.memory["backend.mem_size"]}} -->
+<div class="plot_cards">
+  <div *ngFor="let d of plotsUrlArrays; let i = index" >
+    <div class="wrapper" >
+      <div class="card" [@flipState]="d.state">
+        <div class="card-side front">
+          <iframe [src]="d.url | iFrameSafe" class="resp-iframe"></iframe>
+        </div>
+        <div class="card-side back">
+          <div *ngIf="config">
+            name: {{config.name}}<br>
+            CPU clock_frequency: {{config.cpu.clock_frequency}}<br>
+            memory: {{config.memory.backend}}<br>
+            {{config.memory["clock"]}}<br>
+              {{config.memory["backend.mem_size"]}}
+          </div>
         </div>
       </div>
+      <button class="button" (click)="toggleFlip(d)">Check configurations</button>
     </div>
-    <button class="button" (click)="toggleFlip(d)">Check configurations</button>
+    <br>
   </div>
-  <br>
 </div>
 
 <div *ngIf='XSIMConfig' style="margin-left: 10px">

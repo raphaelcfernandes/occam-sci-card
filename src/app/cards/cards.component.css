@@ -1,6 +1,13 @@
+.plot_cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .wrapper {
     perspective: 1000px;
     width: 400px;
+    margin-left: 15px;
 }
 
 .resp-iframe {
@@ -26,9 +33,9 @@
     backface-visibility: hidden;
     color: black;
     text-align: center;
-    line-height: 100px;
+    line-height: 40px;
     font-size: 24px;
-    font-weight: 700;
+    font-weight: 1000;
     cursor: pointer;
     user-select: none;
   }
