@@ -1,5 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ConfigurationObject } from '../models/configurationObject.model';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,12 +25,18 @@ export class OccamRequesterService {
     const workflow = await this.findWorkFlow(firstResult, URL, token);
     //Should this be a list in the future?
     const object = await this.findConfigForXSIM(workflow, token);
-    const final = await this.getBuild(object, token);
+    const final = await this.getAllBuilds(object, token);
     return final;
   }
 
-  private async getBuild(obj: any, token: string) {
-    const url = this.occamUrl + obj.schema.id + '/' + obj.schema.revision + '/?token=' + token;
+  public getBuildFromObject(obj: any): Observable<ConfigurationObject> {
+    const url = this.occamUrl + obj.id;
+    return this.httpClient.get(url)
+      .pipe(map(res => new ConfigurationObject(res)));
+  }
+
+  private async getAllBuilds(obj: any, token: string) {
+    const url = this.occamUrl + obj.schema.id + '/' + obj.schema.revision;
     return await this.httpClient.get(url).toPromise();
   }
 
@@ -52,7 +61,7 @@ export class OccamRequesterService {
   }
 
   // Returns array contains. This array tells what the object has
-  private async getDataFromURL(URL: string) {
+  public async getDataFromURL(URL: string) {
     return await this.httpClient.get(URL).toPromise();
   }
 

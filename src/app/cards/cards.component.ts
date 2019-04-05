@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { OccamRequesterService } from '../providers/occam-requester.service';
 import { HttpClient } from '@angular/common/http';
+import * as jsPDF from 'jspdf';
+
 @Component({
   selector: 'app-cards',
   templateUrl: './cards.component.html',
@@ -20,6 +22,10 @@ export class CardsComponent implements OnInit, OnDestroy {
   private config: any;
   private plotsUrlArrays = [];
   private XSIMConfig: any;
+  private dependencies = [];
+  private buildDependencies = [];
+  private runDependencies = [];
+  private algName: string;
 
   constructor(private httpClient: HttpClient, private activatedRoute: ActivatedRoute, private occamRS: OccamRequesterService) { }
 
@@ -32,13 +38,63 @@ export class CardsComponent implements OnInit, OnDestroy {
       const arr = url.split('?');
       arr.splice(1, 0, '/output?');
       const outputURL = arr.join('');
-      this.occamRS.getBuildFromExperiment(url).then(result => {
-        console.log(result);
-        this.XSIMConfig = result;
+      //Move this to service while requesting getConfiguration or create new method for this
+      this.occamRS.getDataFromURL(url).then((res: any) => {
+        this.algName = res.name;
       });
-      // this.httpClient.get("https://occam-dev.cs.pitt.edu/QmQ1i5VjdxdU7dWCkhpM7ccVDCBNPX2swTLQSHRiCW8sK1").toPromise().then(result => {
-      //   console.log(result)
-      // })
+      this.occamRS.getBuildFromExperiment(url).then(result => {
+        this.XSIMConfig = result;
+        for (data of this.XSIMConfig.dependencies) {
+          this.occamRS.getBuildFromObject(data).subscribe(res => {
+            //How to fix this?
+            //Ask wilkie to return the version of the object
+            if (res.dependencies) {
+              this.dependencies.push({name: res.name, type: res.type, buildDependencies: res.build.dependencies, dependencies: res.dependencies})
+            } else {
+              this.dependencies.push({name: res.name, type: res.type, buildDependencies: res.build.dependencies})
+            }
+          });
+        }
+        for (data of this.XSIMConfig.build.dependencies) {
+          this.occamRS.getBuildFromObject(data).subscribe(res => {
+            let objectInit: any;
+            let build: any;
+            let myDependencies: any;
+            if (res.init) {
+              objectInit = res.init.dependencies;
+            }
+            if (res.build) {
+              build = res.build.dependencies;
+            }
+            if (res.dependencies) {
+              myDependencies = res.dependencies;
+            }
+            this.buildDependencies.push({name: res.name, type: res.type, buildDependencies: build, dependencies: myDependencies, init: objectInit})
+          });
+        }
+        for (data of this.XSIMConfig.run.dependencies) {
+          this.occamRS.getBuildFromObject(data).subscribe(res => {
+            let objectInit: any;
+            let build: any;
+            let myDependencies: any;
+            let myIncludes: any;
+            if (res.init) {
+              objectInit = res.init.dependencies;
+            }
+            if (res.build) {
+              build = res.build.dependencies;
+            }
+            if (res.dependencies) {
+              myDependencies = res.dependencies;
+            }
+            if (res.includes) {
+              myIncludes = res.includes;
+            }
+            this.runDependencies.push({name: res.name, type: res.type, buildDependencies: build, dependencies: myDependencies, init: objectInit, includes: myIncludes})
+          });
+        }
+        console.log(this.buildDependencies)
+      });
       this.occamRS.getConfigurationFromExperiment(url).then(result => {
         this.config = result;
       });
@@ -59,6 +115,32 @@ export class CardsComponent implements OnInit, OnDestroy {
 
   toggleFlip(element) {
     element.state = (element.state === 'inactive') ? 'active' : 'inactive';
+  }
+
+  download() {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    doc.text('Algorithm: ' + this.algName, 10, 10);
+    doc.text(10, 20, 'Environment: ' + this.XSIMConfig.environment[0].toUpperCase() + this.XSIMConfig.environment.substr(1).toLowerCase());
+    doc.text(10, 30, 'Architecture: ' + this.XSIMConfig.architecture);
+    let j = 30;
+    let i = 20;
+    doc.text(10, j += 10, 'Dependencies:');
+    j += 10;
+    for (let data of this.dependencies) {
+      doc.text(data.name, i, j);
+      j += 10;
+    }
+    for (let data of this.runDependencies) {
+      doc.text(data.name, i, j);
+      j += 10;
+    }
+    for (let data of this.buildDependencies) {
+      doc.text(data.name, i, j);
+      j += 10;
+    }
+    // Save the PDF
+    doc.save('AE_Appendix.pdf');
   }
 
   private reconstructExperimentURL(): string {
