@@ -45,18 +45,19 @@ export class CardsComponent implements OnInit, OnDestroy {
       this.occamRS.getBuildFromExperiment(url).then(result => {
         this.XSIMConfig = result;
         for (data of this.XSIMConfig.dependencies) {
-          this.occamRS.getBuildFromObject(data).subscribe(res => {
+          this.occamRS.getBuildFromObject(data).subscribe((res: any) => {
             //How to fix this?
             //Ask wilkie to return the version of the object
             if (res.dependencies) {
-              this.dependencies.push({name: res.name, type: res.type, buildDependencies: res.build.dependencies, dependencies: res.dependencies})
+              this.dependencies.push({name: res.name, type: res.type, 
+                buildDependencies: res.build.dependencies, dependencies: res.dependencies})
             } else {
               this.dependencies.push({name: res.name, type: res.type, buildDependencies: res.build.dependencies})
             }
           });
         }
         for (data of this.XSIMConfig.build.dependencies) {
-          this.occamRS.getBuildFromObject(data).subscribe(res => {
+          this.occamRS.getBuildFromObject(data).subscribe((res: any) => {
             let objectInit: any;
             let build: any;
             let myDependencies: any;
@@ -69,11 +70,12 @@ export class CardsComponent implements OnInit, OnDestroy {
             if (res.dependencies) {
               myDependencies = res.dependencies;
             }
-            this.buildDependencies.push({name: res.name, type: res.type, buildDependencies: build, dependencies: myDependencies, init: objectInit})
+            this.buildDependencies.push({name: res.name, type: res.type,
+              buildDependencies: build, dependencies: myDependencies, init: objectInit})
           });
         }
         for (data of this.XSIMConfig.run.dependencies) {
-          this.occamRS.getBuildFromObject(data).subscribe(res => {
+          this.occamRS.getBuildFromObject(data).subscribe((res: any) => {
             let objectInit: any;
             let build: any;
             let myDependencies: any;
