@@ -38,6 +38,9 @@ export class CardsComponent implements OnInit, OnDestroy {
       const arr = url.split('?');
       arr.splice(1, 0, '/output?');
       const outputURL = arr.join('');
+      this.httpClient.get("https://occam-dev.cs.pitt.edu/QmP8mGfMQdiyV9DBRwJonZrMVHuv3LzShSiv9kW7cyHhaM/5dtQNUPeqVTQ6ptjRfXPc3GMjAHuUG").toPromise().then(res =>{
+        console.log(res);
+      })
       //Move this to service while requesting getConfiguration or create new method for this
       this.occamRS.getDataFromURL(url).then((res: any) => {
         this.algName = res.name;
